@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="/static/bootstrap.css">
+</head>
+<body>
+<button class="btn btn-success delete">delete</button>
+	<div class="container">
+		<div class="row">
+		<div class="col-md-8 col-md-offset-1">
+			<form class="form-inline" id='addForm'>
+			  <div class="form-group">
+			    <label for="exampleInputName2">Name</label>
+			    <input type="text" class="form-control" id='nameInput' name='name'>
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputEmail2">age</label>
+			    <input type="text" class="form-control" id='ageInput' age='age'>
+			  </div>
+			  <button type="submit" class="btn btn-default">添加</button>
+
+					</div>
+			</form>
+		<table class="table table-striped table-bordered">
+ 			<thead>
+ 				<tr>
+					<th>服务器</th>
+					<th>内存（G）</th>
+					<th>操作</th>
+ 				</tr>
+ 			</thead>
+ 			<tbody id='table-content'>
+ 				
+ 			</tbody>
+		</table>
+</form>
+
+		</div>
+	</div>
+
+	<script src='/static/jquery.min.js'></script>
+
+	<script>
+		function getList(){
+			$.get('/list',function(str){
+				$('#table-content').html(str)
+			})		
+		}
+		getList()
+
+		$(document).on('click','.delete',function(){
+			var id = $(this).attr('data-id')
+			var url = '/delete?id='+id
+			$.get(url,function(res){
+				if (res=='ok') {
+					alert('删除成功')
+					getList()
+				};
+			})
+		})
+		// $('#addForm').on('submit',function(){
+		// 	var url = '/add?name='+$('#nameInput').val()+'&age='+$('#ageInput').val()
+		// 	$.get(url,function(res){
+		// 		if (res=='ok') {
+		// 			alert('添加成功')
+		// 			getList()
+		// 		}
+		// 	})
+		// 	return false
+		// })
+	</script>
+
+
+
+
+
+
+
+
+</body>
+</html>
