@@ -6,18 +6,17 @@
 	<link rel="stylesheet" href="/static/bootstrap.css">
 </head>
 <body>
-<button class="btn btn-success delete">delete</button>
 	<div class="container">
 		<div class="row">
 		<div class="col-md-8 col-md-offset-1">
 			<form class="form-inline" id='addForm'>
 			  <div class="form-group">
-			    <label for="exampleInputName2">Name</label>
-			    <input type="text" class="form-control" id='nameInput' name='name'>
+			    <label for="exampleInputName2">server</label>
+			    <input type="text" class="form-control" id='serverInput' name='name'>
 			  </div>
 			  <div class="form-group">
-			    <label for="exampleInputEmail2">age</label>
-			    <input type="text" class="form-control" id='ageInput' age='age'>
+			    <label for="exampleInputEmail2">memory</label>
+			    <input type="text" class="form-control" id='memoryInput' age='age'>
 			  </div>
 			  <button type="submit" class="btn btn-default">添加</button>
 
@@ -39,10 +38,46 @@
 
 		</div>
 	</div>
+<div class="modal fade" id='updateModal'>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">修改内存</h4>
+      </div>
+      <div class="modal-body">
+        <input id='updateInput' type="text" class='form-control'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" id='saveUpateBtn' class="btn btn-primary">修改</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script src="/static/jquery.min.js"></script>
 
-	<script src='/static/jquery.min.js'></script>
 
+  <script src="/static/bootstrap.min.js"></script>
 	<script>
+	var id
+		$(document).on('click','.update',function(){
+			id = $(this).attr('data-id')
+			$('#updateModal').modal('show')
+			$.get('/search?id='+id,function(res){
+				$('#updateInput').val(res)
+			})
+		})
+		$("#saveUpateBtn").on('click',function(){
+			var memeory = $('#updateInput').val()
+			$.get('update?memory='+memeory+'&id='+id,function(res){
+				if (res=='ok') {
+					alert('success')
+					$('#updateModal').modal('hide')
+					getList()
+				};
+			})
+		})
 		function getList(){
 			$.get('/list',function(str){
 				$('#table-content').html(str)
@@ -60,16 +95,16 @@
 				};
 			})
 		})
-		// $('#addForm').on('submit',function(){
-		// 	var url = '/add?name='+$('#nameInput').val()+'&age='+$('#ageInput').val()
-		// 	$.get(url,function(res){
-		// 		if (res=='ok') {
-		// 			alert('添加成功')
-		// 			getList()
-		// 		}
-		// 	})
-		// 	return false
-		// })
+		$('#addForm').on('submit',function(){
+			var url = '/add?server='+$('#serverInput').val()+'&memory='+$('#memoryInput').val()
+			$.get(url,function(res){
+				if (res=='ok') {
+					alert('添加成功')
+					getList()
+				}
+			})
+			return false
+		})
 	</script>
 
 

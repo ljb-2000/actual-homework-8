@@ -17,7 +17,10 @@ def list():
 
 		init_str = init_str + '''<tr><td>%s</td><td>%s</td><td>
 								<button data-id="%s" class="btn btn-warning delete">
-								delete</button></td></tr>''' % (c[1],c[2],c[0])
+								delete</button>
+								<button data-id="%s" class="btn btn-info update">
+								update</button>
+								</td></tr>''' % (c[1],c[2],c[0],c[0])
 	print init_str
 	return init_str
 
@@ -31,12 +34,26 @@ def delete():
 	sql = 'delete from cmdb where id = %s' % (delete_id)
 	cur.execute(sql)
 	return 'ok'
+@app.route('/search')
+def search():
+	id = request.args.get('id')
+	sql = 'select memory from cmdb where id = %s' % (id)
+	cur.execute(sql)
+
+	return str(cur.fetchall()[0][0])
+@app.route('/update')
+def update():
+	id = request.args.get('id')
+	memory = request.args.get('memory')
+	sql = 'update cmdb set memory=%s where id = %s' % (memory,id)
+	cur.execute(sql)
+	return 'ok'
 
 @app.route('/add')
 def add():
-	name = request.args.get('name')
-	age = request.args.get('age')
-	sql = 'insert into cmdb values ("%s",%s)' % (name,age)
+	server = request.args.get('server')
+	memory = request.args.get('memory')
+	sql = 'insert into cmdb (server ,memory) values ("%s",%s)' % (server,memory)
 	cur.execute(sql)
 	return 'ok'
 
@@ -44,7 +61,7 @@ def add():
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=True,port=9092)
 
 
 
