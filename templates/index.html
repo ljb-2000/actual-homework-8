@@ -34,6 +34,9 @@
  				
  			</tbody>
 		</table>
+		<ul id='pagination' class="pagination">
+			
+		</ul>
 </form>
 
 		</div>
@@ -78,9 +81,15 @@
 				};
 			})
 		})
-		function getList(){
-			$.get('/list',function(str){
-				$('#table-content').html(str)
+		function getList(page){
+			var url = '/list'
+			if (page) {
+				url = url+'?page='+page
+			};
+			$.getJSON(url,function(res){
+				console.log(res)
+				$('#table-content').html(res.table_str)
+				$('#pagination').html(res.pagation_str)
 			})		
 		}
 		getList()
@@ -103,6 +112,11 @@
 					getList()
 				}
 			})
+			return false
+		})
+		$(document).on('click','.page-reboot',function(){
+			var page = $(this).attr('data-page')
+			getList(page)
 			return false
 		})
 	</script>
